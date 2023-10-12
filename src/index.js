@@ -60,5 +60,5 @@ module.exports = function toReadable(num) {
     reminder >= 11 && reminder < 20 ? resultArr.splice(0, 2, numbers[reminder]) : null;
   }
 
-  return resultArr.reverse().join(' ').trim();
+  return resultArr.reverse().join(' ');
 };
