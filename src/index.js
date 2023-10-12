@@ -30,35 +30,35 @@ const numbers = {
 };
 
 module.exports = function toReadable(num) {
-  const resultArr = [];
-  let currentNum = num;
+    const resultArr = [];
+    const numStringRep = String(num);
+    const numCount = numStringRep.length;
 
-  if(num in numbers) return numbers[num];
+    if(num in numbers) return numbers[num];
 
-  for(let iterationNum = 0; currentNum !== 0; iterationNum++) {
-    let numStringRep = '';
-    const reminder = currentNum % 10;
+    for (let i = 0; i < numCount; i++) {
+        const reminder = Number(numStringRep[i]);
 
-    currentNum = Math.floor(currentNum / 10);
+        if (reminder === 0) continue;
 
-    if(reminder === 0) continue;
+        const clearNum = reminder * (10 ** (numCount - i - 1));
+        let clearNumStringRep = '';
 
-    const clearNum = reminder * (10 ** iterationNum);
-    
+        if (clearNum >= 100) {
+            clearNumStringRep = `${numbers[reminder]} hundred`;
+        } else {
+          clearNumStringRep = numbers[clearNum];
+        }
 
-    if(iterationNum === 2) {
-      numStringRep = `${numbers[reminder]} hundred`;
-    } else {
-      numStringRep = numbers[clearNum];
+        resultArr.push(clearNumStringRep);
     }
 
-    resultArr.push(numStringRep);
-  }
+    if (num > 100) {
+        let reminder = num % 100;
+        reminder >= 11 && reminder < 20
+            ? resultArr.splice(-2, 2, numbers[reminder])
+            : null;
+    }
 
-  if(num > 100) {
-    let reminder = num % 100;
-    reminder >= 11 && reminder < 20 ? resultArr.splice(0, 2, numbers[reminder]) : null;
-  }
-
-  return resultArr.reverse().join(' ');
+    return resultArr.join(" ");
 };
