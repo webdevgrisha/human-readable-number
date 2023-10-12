@@ -30,35 +30,28 @@ const numbers = {
 };
 
 module.exports = function toReadable(num) {
-    const resultArr = [];
     const numStringRep = String(num);
     const numCount = numStringRep.length;
 
-    if(num in numbers) return numbers[num];
+    if (num in numbers) return numbers[num];
 
-    for (let i = 0; i < numCount; i++) {
-        const reminder = Number(numStringRep[i]);
+    const readableNumber = numStringRep
+        .replace(/1[1-9]$|\d/g, (match, offset) => {
+            const clearNum = match * 10 ** (numCount - offset - 1);
+            let clearNumStringRep = "";
 
-        if (reminder === 0) continue;
+            if (match == 0) return "";
+            if (match >= 11) return `${numbers[match]} `;
 
-        const clearNum = reminder * (10 ** (numCount - i - 1));
-        let clearNumStringRep = '';
+            if (clearNum >= 100) {
+                clearNumStringRep = `${numbers[match]} hundred`;
+            } else {
+                clearNumStringRep = numbers[clearNum];
+            }
 
-        if (clearNum >= 100) {
-            clearNumStringRep = `${numbers[reminder]} hundred`;
-        } else {
-          clearNumStringRep = numbers[clearNum];
-        }
+            return clearNumStringRep + " ";
+        })
+        .trim();
 
-        resultArr.push(clearNumStringRep);
-    }
-
-    if (num > 100) {
-        let reminder = num % 100;
-        reminder >= 11 && reminder < 20
-            ? resultArr.splice(-2, 2, numbers[reminder])
-            : null;
-    }
-
-    return resultArr.join(" ");
+    return readableNumber;
 };
